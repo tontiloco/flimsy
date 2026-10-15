@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<title>Flimsy</title>
+	<link rel="icon" href="game/index.icon.png" type="image/png">
+	<link rel="apple-touch-icon" href="game/index.apple-touch-icon.png">
+	<style>
+		html, body {
+			margin: 0;
+			height: 100%;
+			background: #f8da82;
+		}
+		body {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			overflow: hidden;
+		}
+		iframe {
+			border: 0;
+			display: block;
+			background: #f8da82;
+		}
+	</style>
+</head>
+<body>
+	<iframe id="game" src="game/index.html" title="Flimsy" allow="autoplay"></iframe>
+	<script>
+		(function () {
+			var DESIGN_W = 720;
+			var DESIGN_H = 1280;
+			// Divisores comunes de 720 y 1280 → tamaños sin franja negra por subpíxel.
+			var DIVISORS = [1, 2, 4, 5, 8, 10, 16, 20, 40, 80];
+			var frame = document.getElementById("game");
+			function sizeFrame() {
+				var maxW = window.innerWidth;
+				var maxH = window.innerHeight;
+				var bestW = 0;
+				var bestH = 0;
+				var i;
+				var w;
+				var h;
+				for (i = 0; i < DIVISORS.length; i++) {
+					w = DESIGN_W / DIVISORS[i];
+					h = DESIGN_H / DIVISORS[i];
+					if (w <= maxW && h <= maxH && w > bestW) {
+						bestW = w;
+						bestH = h;
+					}
+				}
+				for (i = 2; i <= 4; i++) {
+					w = DESIGN_W * i;
+					h = DESIGN_H * i;
+					if (w <= maxW && h <= maxH && w > bestW) {
+						bestW = w;
+						bestH = h;
+					}
+				}
+				if (bestW < 1) {
+					bestW = DESIGN_W / 80;
+					bestH = DESIGN_H / 80;
+				}
+				frame.style.width = bestW + "px";
+				frame.style.height = bestH + "px";
+			}
+			sizeFrame();
+			window.addEventListener("resize", sizeFrame);
+		})();
+	</script>
+</body>
+</html>
